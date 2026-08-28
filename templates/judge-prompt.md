@@ -112,7 +112,15 @@ time (and again if the corpus changes a lot), run these two probes:
 2. Give a fresh judge one deliberately generic AI draft of a similar piece (write it
    quickly, no voice matching). It should score clearly below 85.
 
-Both probes pass: the gate is live. Either fails: mark the skill PROVISIONAL. In
+Both probes pass: the gate is live. Either fails: mark the skill PROVISIONAL.
+
+One refinement calibration can earn: when both holdout probes pass but land close to
+85 (say 85 to 90), the judge is honest but harsh for this corpus, and genuine writing
+will fail a single draw of it regularly. In that case set the working gate to the
+lowest holdout score minus 5, never below 75 and never above 85, and shift the
+borderline double-judge band down with it (gate minus 5 through gate plus 4). Record
+the calibrated gate and the holdout scores in the generated skill so every stamp
+names the bar it cleared. In
 provisional mode the loop still runs and the judge's line-level feedback still drives
 rewrites, but no numeric pass is claimed to the user; drafts ship as "best effort,
 judge uncalibrated for this corpus" until more samples fix it. Never present a score
