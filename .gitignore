@@ -1,0 +1,5 @@
+# Local corpora never get committed. Real writing (Naval's or anyone's) stays on
+# the machine that collected it.
+naval-corpus/
+corpus/
+STATUS.md
