@@ -20,7 +20,9 @@ Ask the user to paste their own writing. Rules:
   from the same person. Label each sample with its channel. The skill will match
   against the channel that fits the current task.
 - Verbatim only. Keep typos, lowercase habits, weird punctuation, profanity, all of
-  it. Never clean up a sample. A cleaned sample is your voice, not theirs.
+  it. Never clean up a sample. A cleaned sample is your voice, not theirs. (The one
+  exception: the corpus interview in SETUP.md step 2 lets the OWNER choose spelling
+  normalization; that choice is theirs alone, and raw originals stay unchanged.)
 - Only their solo writing. No co-written docs, no AI-assisted drafts, no heavily
   edited pieces. If the user is unsure whether AI touched a piece, leave it out.
   Older pieces from before they used AI tools are the cleanest ore.

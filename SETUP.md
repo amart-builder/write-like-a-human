@@ -48,6 +48,22 @@ other people's words in a thread, boilerplate). Cut polluted samples. If fewer t
 samples survive, stop and tell the user the match will be unreliable; let them decide
 to add more or proceed degraded.
 
+Then run a short corpus interview: the corpus is theirs, so before measuring anything,
+ask three quick questions in one message, not a quiz:
+
+1. Spelling: keep the corpus exactly verbatim, or fix misspellings? Default is
+   verbatim. If they choose fixes, correct spelling only (wrongly spelled or
+   accidentally doubled words), never grammar, punctuation, or casing unless they
+   say so, and keep the untouched raw originals somewhere outside the skill.
+2. Anything to cut or redact, now that they've seen what was collected?
+3. Standing rules the corpus can't show: a signature they always want, phrases they
+   never want, anything they're deliberately changing about how they write going
+   forward. These override measured habits, and the fingerprint says so.
+
+Record every answer in the fingerprint's "Flagged by <name>" section so the writer
+and future sessions honor them. The verbatim default exists to protect the voice,
+not to overrule its owner.
+
 ## Step 3: build the voice fingerprint
 
 Create `VOICE-FINGERPRINT.md` by measuring the corpus, not vibing about it. Every
