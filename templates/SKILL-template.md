@@ -77,10 +77,11 @@ Aim for an exact match, not an homage. While drafting:
 
 1. Spawn a fresh-context judge exactly as `judge-protocol.md` (installed beside
    this skill) describes. It gets corpus samples and your candidate. Nothing else.
-2. Score 90 or higher: done. Score 80 to 89: borderline, spawn a second fresh
-   judge and average the two per judge-protocol.md before deciding. Below 80 (or
-   a failed average): you get the score, the betraying lines, and the authentic
-   lines.
+2. Score at or above the gate plus 5: done. Within the borderline band (gate
+   minus 5 through gate plus 4): spawn a second fresh judge and average the two
+   per judge-protocol.md before deciding. Below the band (or a failed average):
+   you get the score, the betraying lines, and the authentic lines. The gate is
+   85 unless calibration recorded a different one in judge-protocol.md.
 3. Decide whether a rewrite can fix it. Rewrite surgically: fix the betraying
    lines, leave the authentic lines alone, then re-judge with a NEW fresh judge.
    Priority order when they conflict: truth and required meaning first, then fit
