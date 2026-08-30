@@ -509,11 +509,11 @@ Provide:
 > In conclusion, the future looks bright. Exciting times lie ahead as we continue this journey toward excellence. Let me know if you’d like me to expand on any section!
 
 **Draft rewrite:**
-> AI coding assistants speed up some tasks. In a 2024 study by Google, developers using Codex completed simple functions 55% faster than a control group, but showed no improvement on debugging or architectural decisions.
+> AI coding assistants speed up some tasks. In a 2023 controlled study (Peng et al., arXiv:2302.06590), developers using GitHub Copilot completed a standard coding task 55.8% faster than a control group, though the study measured one task, not debugging or architecture.
 >
 > The tools are good at boilerplate: config files, test scaffolding, repetitive refactors. They are bad at knowing when they are wrong. I have mass-accepted suggestions that compiled, passed lint, and still did the wrong thing because I stopped paying attention.
 >
-> Mira, an engineer at a fintech startup I interviewed, said she uses Copilot "like autocomplete for boring code" but reviews every line before committing. Jake, a senior dev at a larger company, disabled it after it kept suggesting patterns from a deprecated internal library.
+> [NAME], an engineer at a fintech startup [VERIFY: real person and quote needed], says she uses Copilot "like autocomplete for boring code" but reviews every line before committing. [NAME], a senior dev at a larger company [VERIFY], disabled it after it kept suggesting patterns from a deprecated internal library.
 >
 > The productivity claims are hard to verify. GitHub says Copilot users "accept 30% of suggestions," but acceptance is not correctness, and correctness is not value. The 2024 Uplevel study found no statistically significant difference in pull-request throughput between teams with and without AI assistants.
 >
@@ -529,7 +529,7 @@ Provide:
 >
 > They're great at boilerplate: config files, test scaffolding, repetitive refactors. They're also great at sounding right while being wrong. I've accepted suggestions that compiled, passed lint, and still missed the point because I stopped paying attention.
 >
-> People I talk to tend to land in two camps. Some use it like autocomplete for chores and review every line. Others disable it after it keeps suggesting patterns they don't want. Both feel reasonable.
+> Engineers tend to land in two camps. Some use it like autocomplete for chores and review every line. Others disable it after it keeps suggesting patterns they don't want. Both feel reasonable.
 >
 > The productivity metrics are slippery. GitHub can say Copilot users "accept 30% of suggestions," but acceptance isn't correctness, and correctness isn't value. If you don't have tests, you're basically guessing.
 
@@ -550,6 +550,8 @@ Provide:
 - Removed filler phrases and persuasive framing ("In order to", "At its core")
 - Removed generic positive conclusion ("the future looks bright", "exciting times lie ahead")
 - Made the voice more personal and less "assembled" (varied rhythm, fewer placeholders)
+
+**No-fabrication note (local patch, 2026-08-30):** the example above uses [NAME] and [VERIFY] markers where the original vendored version invented an interview and misattributed a study. Never invent people, quotes, anecdotes, or lived experience to make text feel human, and never cite a study from memory without checking it: humanizing changes style, not facts. Missing specifics get a [BRACKET] or [VERIFY] marker and a note to the user, never a plausible invention.
 
 
 ## Reference

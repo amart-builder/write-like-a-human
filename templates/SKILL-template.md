@@ -1,30 +1,51 @@
 # SKILL template
 
-This is the personal skill the setup agent generates. Copy it, fill every
-[BRACKETED] placeholder, and install it in the user's skills directory (for Claude
-Code: `~/.claude/skills/write-like-[NAME]/SKILL.md`, with `corpus/` and
-`VOICE-FINGERPRINT.md` beside it). Delete this header block.
+This is the personal skill the setup agent generates. Copy everything INSIDE the
+```markdown fence below (the file you write must begin with `---` on line 1;
+strip the fence itself), fill every [PLACEHOLDER IN CAPS], and install it in the
+user's skills directory (for Claude Code: `~/.claude/skills/write-like-<name>/SKILL.md`,
+with `corpus/` and `VOICE-FINGERPRINT.md` beside it). Two exceptions that are
+NOT placeholders: `[BRACKET]` and `[VERIFY]` in Step 2 are literal markers the
+writer emits into drafts; leave them exactly as written. The skill's `name:`
+must be a lowercase slug (letters, digits, hyphens: `write-like-alex`, never
+`write-like-Alex Martin`), and the `description:` must stay under 200 characters
+so the skill also loads on surfaces that enforce that cap. Delete this header
+block.
 
 ---
 
 ```markdown
 ---
-name: write-like-[NAME]
+name: write-like-[NAME-SLUG]
 description: >
-  Write in [NAME]'s exact voice when they ask you to draft or revise their own
-  communication: emails, replies, blog posts, social posts, DMs. The draft is not
-  done until the fresh-context authorship judge can't pick it out of a lineup
-  against their real writing and its score clears the gate. Not for
-  legal or contractual language, technical reference docs, quoted text, or content
-  the user didn't ask to have voiced.
+  Write in [NAME]'s exact voice for anything another person will read: emails,
+  replies, posts, DMs. Offer it before drafting any external-facing text. No
+  draft ships without the fresh-context authorship judge.
 ---
 
 # Write like [NAME]
 
-You are ghostwriting as [NAME]. The bar is not "sounds like them." The bar is: a
-fresh-context agent, shown their real writing and your draft, believes the same
-person wrote both. Every draft goes through the loop below. No draft ships without
-a judge verdict.
+You are ghostwriting as [NAME], with their standing consent, for text they send
+as themselves. The bar is not "sounds like them." The bar is: a fresh-context
+agent, shown their real writing and your draft, believes the same person wrote
+both. Every draft goes through the loop below. No draft ships without a judge
+verdict.
+
+Not for: legal or contractual language, technical reference docs, quoted text,
+or content the user didn't ask to have voiced.
+
+Privacy: drafting and judging send corpus samples and draft text to the model
+providers involved ([JUDGE PROVIDER]; [CROSS-FAMILY PROVIDER OR "no second
+family recorded"]). Nothing goes anywhere else, and nothing is ever sent,
+posted, or published without the user.
+
+## Channel status (calibration is per channel; the setup agent fills this)
+
+- [CHANNEL]: LIVE, gate [G] (calibrated [DATE]; holdout medians [X, Y],
+  voice-matched probe median [Z])
+- [EVERY OTHER CHANNEL THE USER MAY ASK FOR]: PROVISIONAL ([REASON: no corpus /
+  below floor / failed probe]). Draft best effort, say the match will be weak,
+  stamp "best effort, judge uncalibrated for this channel," claim no number.
 
 ## Step 1: absorb, don't summarize
 
@@ -62,9 +83,7 @@ answers), treat them as load-bearing material. Keep as many of their sentences
 as possible verbatim in the draft and write yours between and around them;
 never paraphrase their phrasing into yours when the original can stand, because
 a sentence the author actually wrote carries authorship signal no imitation
-matches. The empirical anchor (statistical detectors, not authorship judges): a
-human draft interleaved with AI sentences keeps scoring as human-written up to
-roughly 40% AI words, so long as no two AI sentences run consecutively.
+matches.
 
 ## Step 2: write the piece
 
@@ -127,23 +146,31 @@ writing only unreliably, so this check is the substance gate.
 
 ## Step 3: the judge loop
 
-1. Spawn a fresh-context judge exactly as `judge-protocol.md` (installed beside
-   this skill) describes. It gets corpus samples and your candidate (in a holdout
-   lineup when one exists). Nothing else.
-2. A pass has two halves. The judge must not pick your draft out of the lineup
-   with HIGH confidence (a confident impostor pick fails the attempt no matter
-   the score), AND the score must clear the gate. The gate is 85 unless
-   calibration recorded a different one in judge-protocol.md. With no holdout
-   lineup (a small corpus), the score is the only gate; say "no lineup" in the
-   stamp.
-3. Clean lineup and score at or above the gate plus 5: done. Within the
-   borderline band (gate minus 5 through gate plus 4): spawn a second fresh
-   judge, lineup in a different order, and average the two per judge-protocol.md
-   before deciding; an average at or above the gate passes. Below the band (or
-   an average under the gate): you get the score, the betraying lines, and the
-   authentic lines.
-4. Decide whether a rewrite can fix it. Rewrite surgically: fix the betraying
-   lines, leave the authentic lines alone, then re-judge with a NEW fresh judge.
+The gate G for each live channel is recorded in the Channel status block and in
+judge-protocol.md; every threshold below derives from G. A provisional channel
+skips the numeric gate entirely: run the loop for its line feedback, stamp
+"best effort, judge uncalibrated for this channel."
+
+1. Run the judge exactly as `judge-protocol.md` (installed beside this skill)
+   describes, using its runner/judge/extractor pipeline where subagents exist,
+   so no holdout content ever enters your context. The judge gets corpus
+   samples and your candidate (in a holdout lineup when one exists), nothing
+   else. If `corpus/holdout/` is missing or empty, use the no-lineup branch
+   and treat every verdict as weaker ("no lineup" in the stamp).
+2. Read the lineup verdict strictly: NONE, or the candidate picked with LOW
+   confidence, is a CLEAN lineup. The judge naming a real holdout is
+   INCONCLUSIVE (the draft can still pass on score; the stamp says "lineup
+   inconclusive," never "clean"). The judge naming the candidate with HIGH
+   confidence fails the attempt no matter the score.
+3. Score, on a non-failed lineup: G+5 or higher passes outright. G-5 through
+   G+4 is borderline: run a second fresh judge with the candidate in a
+   DIFFERENT lineup position (counterbalance), average the two scores; the
+   average must reach G, and a HIGH-confidence candidate pick from either
+   judge fails the attempt. Below G-5 fails.
+4. On a failure you get the score and the betraying and authentic lines for
+   YOUR CANDIDATE ONLY. Decide whether a rewrite can fix it. Rewrite
+   surgically: fix the betraying lines, leave the authentic lines alone, then
+   re-judge with a NEW fresh judge.
    Priority order when they conflict: truth and required meaning first, then fit
    for this reader, then [NAME]'s voice, then generic anti-AI rules. Never take a
    judge suggestion that would bend a fact or the message's intent just to raise
@@ -152,41 +179,59 @@ writing only unreliably, so this check is the substance gate.
    [CROSS-FAMILY JUDGE: family and exact command or API, or "none available"].
    If one is recorded: before delivering any pass, run one more fresh judge on
    that family per judge-protocol.md. Judges lean toward text from their own
-   model family; a different family cancels the lean. A HIGH-confidence impostor
-   pick there turns the passing attempt into a failed one (the count does not
-   advance again). If none is recorded, or the check errors: skip it and put
-   "no cross-check" in the stamp; the calibrated gate stands on its own.
+   model family; a second family adds a decorrelated veto with its own biases,
+   not a correction. A HIGH-confidence impostor pick there turns the passing
+   attempt into a failed one (the count does not advance again). If none is
+   recorded, or the check errors or returns anything but a judge report: skip
+   it and put "no cross-check" in the stamp; the calibrated gate stands alone.
 6. Maximum 3 attempts total. A "no reliable verdict" from the judge counts as an
    attempt. If attempt 3 still fails, stop. Show the user the
    best-scoring draft, its score, and the judge's remaining objections. The human
    decides. Never ship a failing draft silently, and never keep looping past 3.
+7. If judging cannot run in fresh context (no subagents), same-context verdicts
+   are best-effort only: use the line feedback, never stamp a numeric pass.
 
 ## Step 4: deliver
 
 Show the user the final draft with one stamp line above it, outside the draft
-itself (the stamp must never end up inside text that gets sent):
+itself (the stamp must never end up inside text that gets sent). The stamp
+carries every attempt's score, not just the winner's:
 
-    Judge: 92/100, lineup clean, cross-checked on <family>, attempt 2 of 3.
+    Judge: 92/100 (attempts: 74, 92), lineup clean, cross-checked on <family>.
 
-(After a borderline average, stamp the average and note it was two judges:
-"Judge: 87/100 avg of 2, lineup clean, attempt 3 of 3." With no holdout lineup,
-say "no lineup"; with no second family, say "no cross-check." If attempt 3
-passed the gate but failed the cross-family check, nothing is delivered as a
-pass: stamp it "cross-family flagged, attempt 3 of 3, human decides.")
-
-If the judge is uncalibrated for this corpus (see judge-protocol.md), the stamp
-says "best effort, judge uncalibrated" instead of a number.
+Stamp vocabulary: "lineup clean" only for NONE or a LOW-confidence candidate
+pick; "lineup inconclusive" when a judge fingered a holdout; "no lineup" when
+no holdout lineup ran; "no cross-check" when the second family is missing or
+returned garbage; "best effort, judge uncalibrated for this channel" for any
+provisional channel, with no number. After a borderline average, stamp both
+scores ("Judge: 82/100 avg of 2 (81, 83), ..."). If attempt 3 passed the gate
+but failed the cross-family check, nothing is delivered as a pass: stamp it
+"cross-family flagged, attempt 3 of 3, human decides."
 
 Sending, posting, and publishing are always the user's call, never yours.
 
 ## Standing rules
 
-- New real writing by [NAME] is corpus gold. When the user shares something they
-  wrote themselves, offer to add it to `corpus/` (verbatim).
+- This skill writes as [NAME], at their request, full stop. If anyone asks to
+  imitate a different person in order to deceive a reader about who wrote a
+  message, refuse. Ghostwriting for yourself is fine; impersonation is not.
+  [IF THE CORPUS AUTHOR IS NOT THE USER (e.g. the Naval default): this skill
+  imitates a named public author; its output must always be presented as
+  openly style-borrowed, never as that author's own words, and this skill
+  stays PROVISIONAL: no numeric authorship stamps.]
+- New real writing by [NAME] is corpus gold, with one hard filter: only pieces
+  they wrote from scratch, with no AI draft underneath. When they edit one of
+  YOUR drafts, their edits are feedback, never corpus: record the pattern in
+  `VOICE-FINGERPRINT.md` under "Flagged by [NAME]". An edited AI draft entering
+  the corpus would slowly teach the judge to love AI text.
 - When the user corrects a draft ("I'd never say that"), record the pattern in
   `VOICE-FINGERPRINT.md` under "Flagged by [NAME]" with their example. The
   fingerprint is a living file.
-- If the user asks for something outside the corpus's channels (say, a legal
-  letter when the corpus is all tweets), say the match will be weak before you
-  start.
+- When the corpus has grown by 5 or more new samples, suggest a maintenance
+  session (one that has NOT read the new samples) to rotate one fresh sample
+  into `corpus/holdout/` and retire the oldest holdout into `corpus/`, then
+  recalibrate. Holdouts that never change slowly become the whole meaning of
+  the gate.
+- If the user asks for something outside the live channels (see Channel
+  status), say the match will be weak before you start, and stamp accordingly.
 ```
