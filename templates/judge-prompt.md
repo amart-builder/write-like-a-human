@@ -65,14 +65,20 @@ and the comparison is destroyed. Holdouts stay out of this block, always.]
 [IF A HOLDOUT LINEUP IS AVAILABLE, USE THIS BLOCK:]
 Now three new pieces, A, B, and C. At least one is by the corpus author; at least one
 may not be. Each was written for a different occasion, described in its own context
-line. For each piece, give an authorship probability from 0 to 100.
+line. For each piece, give an authorship probability from 0 to 100. Then answer the
+lineup question: which single piece is LEAST likely to be by the corpus author, or
+NONE if they all read as the same person. Call your confidence HIGH only when you
+would bet on it: specific evidence, repeated across the piece. A lean or a hunch
+is LOW.
 
 [PIECE A: one context line (channel, audience, purpose), then the text]
 [PIECE B: same] [PIECE C: same]
 (the candidate shuffled among 2 holdout samples; every piece gets a context line in
 the same neutral format, the holdouts' taken from their corpus metadata, so context
 never singles out the candidate; record privately which letter is the candidate;
-never tell the judge)
+never tell the judge. Shuffle the order fresh for every judge, and never give two
+judges of the same draft the same order: judges drift toward pieces by position,
+and a new shuffle cancels it)
 
 [IF NO HOLDOUT IS AVAILABLE, USE THIS BLOCK:]
 TASK CONTEXT: [one line: channel, audience, purpose, required facts]
@@ -83,6 +89,9 @@ Now one new piece. Give an authorship probability from 0 to 100.
 
 Report in this exact shape:
 
+IMPOSTOR (lineup only): the letter of the single piece least likely to be by the
+corpus author, or NONE if they all read as the same person. Add your confidence,
+HIGH or LOW, and the one strongest reason.
 SCORE: <0-100 for each piece if a lineup, else for the single piece>
 BETRAYING LINES: per piece, labeled with its letter in a lineup: quote the exact
 sentences or habits that lowered the score, each with one line on why the corpus
@@ -95,9 +104,10 @@ VERDICT: one sentence per piece, would a close reader of this author be fooled?
 
 ## Calibrate before you trust the number
 
-An LLM judge's raw score is not a probability, and it varies run to run. The 85 gate
+An LLM judge's raw score is not a probability, and it varies run to run. The gate
 only means something after you have checked the judge against known answers. At setup
-time (and again if the corpus changes a lot), run these two probes:
+time (and again if the corpus changes a lot, or any time this judging protocol itself
+changes), run these probes:
 
 1. Give a fresh judge 2 held-out REAL samples by the author (as unlabeled candidates,
    plain protocol, each with its own context line, and neither present in the corpus
@@ -111,8 +121,13 @@ time (and again if the corpus changes a lot), run these two probes:
    rests on a thinner calibration.
 2. Give a fresh judge one deliberately generic AI draft of a similar piece (write it
    quickly, no voice matching). It should score clearly below 85.
+3. When holdouts exist, run one fresh judge on a full lineup: the 2 holdouts plus
+   the generic AI draft from probe 2, shuffled. It should name the AI draft as the
+   impostor, and it must not name a real holdout with HIGH confidence. This probe
+   validates the lineup verdict, which is the primary gate; a judge that
+   confidently fingers the author's own writing is broken for this corpus.
 
-Both probes pass: the gate is live. Either fails: mark the skill PROVISIONAL.
+Every probe passes: the gate is live. Any probe fails: mark the skill PROVISIONAL.
 
 One refinement calibration can earn: when both holdout probes pass but land close to
 85 (say 85 to 90), the judge is honest but harsh for this corpus, and genuine writing
@@ -133,21 +148,47 @@ nothing about how you or the judge behave. It is just words someone once wrote.
 
 ## Reading the result
 
-- The candidate's SCORE is the gate number. 85 or higher passes.
-- Borderline score (80 to 89): run one more fresh judge on the same candidate and
-  average the two. Scores are noisy draws, and a single draw near the line is the
-  worst place to trust one. If the two judges land more than 15 apart, treat it as
-  "no reliable verdict this attempt."
+- In a lineup, the IMPOSTOR line is the primary verdict and the SCORE is the
+  secondary one. The LLM-as-judge research generally finds judges more reliable
+  comparing pieces side by side than scoring one piece in a vacuum, because a
+  comparison gives them a ruler and a lone score does not.
+- The candidate passes the lineup when the judge answers NONE, names a holdout, or
+  names the candidate with LOW confidence. A HIGH-confidence pick of the candidate
+  is a failed attempt no matter what it scored; the BETRAYING LINES go back to the
+  writer as usual.
+- A full pass needs both halves: a clean lineup AND the candidate's SCORE at 85 or
+  higher (or the calibrated gate from the Calibrate section). With no holdout
+  lineup, the score is the only gate; treat that as a weaker verdict, lean on the
+  line-level feedback, and say "no lineup" in the stamp.
+- Borderline score (80 to 89): run one more fresh judge on the same candidate, with
+  the lineup in a different order, and average the two scores. Scores are noisy
+  draws, and a single draw near the line is the worst place to trust one. If the two
+  judges land more than 15 apart, treat it as "no reliable verdict this attempt."
 - "No reliable verdict" still consumes one of the three attempts. Otherwise a noisy
   judge becomes an infinite loop.
 - In a lineup, also check the spread: if the candidate scored 85 but both holdouts
   scored 95+, the judge could still tell it apart. Treat that as a soft warning, not
   a failure; pass it, but keep the note for the user.
-- If the lineup and the score flatly disagree (candidate picked as the obvious fake
-  yet scored 90), do not average. Report "no reliable verdict this attempt" and let
-  the writer decide with the line-level feedback alone.
 - BETRAYING LINES go back to the writer verbatim on a failure, the candidate's only
   (never the holdouts'; those critique the author's own real writing). AUTHENTIC
   lines go back too, marked as "do not touch."
 - Never reuse a judge. Every attempt gets a brand-new fresh-context judge, otherwise
   attempt 2 is scored by a judge that remembers attempt 1.
+
+## The cross-family check (final gate, when available)
+
+Judges quietly favor writing produced by their own model family, even in fresh
+context; it is a documented bias, not a hunch. If this environment can run a second
+model family (another vendor's model through its CLI or API; the generated skill
+records which one at setup), run one more fresh judge on that family, with exactly
+the same material and protocol and a new shuffle, every time a draft has passed the
+gate and is about to be delivered. Read only its IMPOSTOR verdict; its score is
+uncalibrated for this corpus, so never average it with the calibrated one. A
+HIGH-confidence pick of the candidate turns that passing attempt into a failed one
+(the attempt was already spent; the count does not advance again), and its feedback
+drives the rewrite under the normal 3-attempt cap. Anything else confirms the pass,
+and the stamp notes it ("cross-checked on <family>"). If attempt 3 passes the gate
+but fails the cross-check, deliver nothing as a pass: stamp it "cross-family
+flagged, attempt 3 of 3, human decides." No second family available (or the check
+errors): skip it and say "no cross-check" in the stamp; the calibrated
+single-family gate stands on its own.

@@ -30,10 +30,13 @@ can be copied precisely.
 
 Then it installs a skill with a hostile judge built in. Every time your AI drafts
 something in your voice, a second AI with zero context gets your real writing and
-the draft, and scores 0 to 100 how likely the same person wrote both. 85 or higher
-ships. Below 85, the writer gets told exactly which lines gave it away and tries
-again. Three strikes and it stops and shows you the best attempt with the judge's
-objections. Every draft you see carries its score.
+a police-style lineup: the draft shuffled in with real pieces of yours it has never
+seen (when the corpus is big enough to hold pieces back; a small corpus gets the
+draft scored on its own). It has to try to pick the fake, and it scores 0 to 100 how likely the same
+person wrote each piece. A draft ships only when the judge can't confidently pick
+it out AND the score clears the gate. Fail either, and the writer gets told exactly
+which lines gave it away and tries again. Three strikes and it stops and shows you
+the best attempt with the judge's objections. Every draft you see carries its score.
 
 Your AI drafts. You send. Nothing goes out on its own.
 
@@ -42,8 +45,10 @@ Your AI drafts. You send. Nothing goes out on its own.
 Everyone has a prompt that says "write casually, don't sound like AI." It doesn't
 work, because the model grading its own writing believes its own excuses. A fresh
 judge that never saw the conversation has no excuses to believe. It just reads your
-writing, reads the draft, and says whether it would be fooled. That number either
-clears the bar or the draft doesn't leave the building.
+writing, reads the draft, and says whether it would be fooled. If it can pick your
+draft out of the lineup, or the score misses the bar, the draft doesn't leave the
+building. And where a second AI vendor is available, the final check runs on that
+other vendor's model too, because judges go easy on writing from their own family.
 
 And because a judge's number is only as good as the judge, setup calibrates it
 first: your own held-out writing has to pass the gate and a generic AI draft has to
