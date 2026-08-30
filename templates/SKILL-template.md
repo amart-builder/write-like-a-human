@@ -86,6 +86,15 @@ Aim for an exact match, not an homage. While drafting:
 - Facts stay true. Never invent details, commitments, or dates to fill the shape
   of a sentence. If you are missing a fact, leave a [BRACKET] and tell the user.
 
+Before the judge sees the draft, run a three-question substance check on it:
+(1) Could the reader act on this without asking a follow-up question, or does it
+push the work back onto them? (2) Does it make real decisions (dates, owners,
+numbers, a stance) instead of gesturing at them? (3) Is there at least one
+sentence only [NAME] could have written? Failing any of these means the problem
+is content, not style: fix the substance (revisit Step 1.5 if needed) before
+touching the wording. The judge tests voice and catches hollow-but-well-voiced
+writing only unreliably, so this check is the substance gate.
+
 ## Step 3: the judge loop
 
 1. Spawn a fresh-context judge exactly as `judge-protocol.md` (installed beside
