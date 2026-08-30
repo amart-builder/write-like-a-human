@@ -21,7 +21,10 @@ write-like-<name>/
 First, a capability check, silently: can you read and write local files where skills
 live? Can you spawn a fresh-context agent (or at least open a clean conversation) for
 the judge? Do you have email access, and which model provider will the judge run on?
-What you find shapes what you offer; what you lack, you disclose instead of faking.
+Can you also run a SECOND model family (another vendor's model through its CLI or an
+API) for the judge protocol's cross-family check? Note the exact command or API if
+so. What you find shapes what you offer; what you lack, you disclose instead of
+faking.
 
 Then, before touching anything, tell the user in a few plain sentences: you'll collect real
 samples of their writing (or a default), study how they actually write, and install a
@@ -90,8 +93,9 @@ Keep the whole file under about 80 lines. A bloated fingerprint gets ignored.
 
 ## Step 4: generate and install the skill
 
-1. Fill `templates/SKILL-template.md` (name, channels) and write it to the user's
-   skills directory. For Claude Code that is `~/.claude/skills/write-like-<name>/`.
+1. Fill `templates/SKILL-template.md` (name, channels, and the cross-family judge
+   found in step 0: the family plus the exact command or API, or "none available")
+   and write it to the user's skills directory. For Claude Code that is `~/.claude/skills/write-like-<name>/`.
    For another tool, use its equivalent of an always-loadable instruction file
    (rules file, custom instructions) and adapt: same content, same loop.
 2. Copy `reference/humanizer-rules.md` and `templates/judge-prompt.md`
@@ -106,9 +110,10 @@ as `judge-protocol.md` describes. Never skip the judge silently.
 
 ## Step 5: calibrate the judge
 
-Before any real draft, prove the judge works on this corpus. Run the two probes in
+Before any real draft, prove the judge works on this corpus. Run the probes in
 `templates/judge-prompt.md` (Calibrate section): held-out real samples must clear 85,
-a deliberately generic AI draft must fail. With fewer than 8 samples in a channel,
+a deliberately generic AI draft must fail, and, when holdouts exist, a lineup probe
+must catch the AI draft without confidently fingering the author's real writing. With fewer than 8 samples in a channel,
 use the temporary-holdout branch described there. Both probes pass: the gate is live,
 unless the channel sits below its corpus floor, in which case passing probes sharpen
 the feedback loop but do not lift PROVISIONAL for that channel.
@@ -132,7 +137,8 @@ Do not declare success on an installed file. Prove the loop on 3 real pieces:
    ask for 3 real tasks (a reply, a post, a short update).
 2. For each, run the full loop from the installed SKILL.md: absorb, write, judge,
    rewrite if needed, max 3 attempts. Use the real judge, fresh context each time.
-3. Show the user all 3 results with their judge stamps (score, attempt count) and
+3. Show the user all 3 results with their judge stamps (score, lineup verdict,
+   attempt count) and
    the drafts side by side with what the judge flagged.
 4. Ask what reads wrong. Every "I'd never say that" goes into the fingerprint's
    Flagged section, and if they rewrite a line, offer to save their version to the
