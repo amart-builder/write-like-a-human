@@ -57,6 +57,15 @@ reads as AI, because it is style without substance, and a judge catches that onl
 unreliably. Skip this step for replies and short pieces where the user's request
 already carries the substance.
 
+When the user's own words come back (a ramble, a voice-note transcript, typed
+answers), treat them as load-bearing material. Keep as many of their sentences
+as possible verbatim in the draft and write yours between and around them;
+never paraphrase their phrasing into yours when the original can stand, because
+a sentence the author actually wrote carries authorship signal no imitation
+matches. The empirical anchor (statistical detectors, not authorship judges): a
+human draft interleaved with AI sentences keeps scoring as human-written up to
+roughly 40% AI words, so long as no two AI sentences run consecutively.
+
 ## Step 2: write the piece
 
 Aim for an exact match, not an homage. While drafting:
@@ -83,8 +92,29 @@ Aim for an exact match, not an homage. While drafting:
   deliverable are the ones on this page. Where the catalog and the corpus
   disagree, THE CORPUS WINS. If [NAME] genuinely writes em dashes or triads,
   match them.
+- Two tell families the catalog understates, kill both on sight (unless the
+  corpus genuinely does them): reframes that cross sentence boundaries, where
+  the negation pivot hides without the word "not" ("Most teams think they have
+  a hiring problem. They have a standards problem." / "Is this a productivity
+  problem? No." / a heading like "Not a tool. A system."): delete the rejected
+  half and state the claim directly; and metaphor verbs applied to ideas or
+  plans ("baked in", "woven", "distilled", "unpacked", "surfaced", "anchored",
+  "stitched together"): use the literal verb instead.
+- On long pieces, re-read the fingerprint every few paragraphs and check the
+  newest paragraphs against it. Drafts drift back toward generic AI rhythm as
+  they grow (sentences lengthen, edges smooth out, phrasing goes safe), worst
+  in the middle and end; the voice has to hold in the last paragraph as
+  strongly as in the first. Per-line test while drafting: could this exact
+  sentence have appeared in one of [NAME]'s real pieces? If it could have come
+  from anyone, check it against the fingerprint before rewriting it: plenty of
+  real sentences are ordinary, and forcing a quirk into every line is the
+  caricature trap.
 - Facts stay true. Never invent details, commitments, or dates to fill the shape
   of a sentence. If you are missing a fact, leave a [BRACKET] and tell the user.
+  Same discipline for facts you merely remember: a claim that didn't come from
+  the user, the thread, or a source you can name gets a [VERIFY] mark, never
+  shipped silently. A plausible number from memory is an invented number until
+  checked.
 
 Before the judge sees the draft, run a three-question substance check on it:
 (1) Could the reader act on this without asking a follow-up question, or does it

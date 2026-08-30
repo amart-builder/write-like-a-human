@@ -62,6 +62,12 @@ ask three quick questions in one message, not a quiz:
 3. Standing rules the corpus can't show: a signature they always want, phrases they
    never want, anything they're deliberately changing about how they write going
    forward. These override measured habits, and the fingerprint says so.
+   If a stated rule contradicts what the corpus plainly does (they ban a word
+   the samples use constantly), or if Step 3's measurements later turn up such
+   a clash (short sentences requested, samples averaging 24 words), don't
+   silently pick a side: come back and ask which wins, how they write or how
+   they want to write. Aspiration is legitimate; it just has to be chosen, and
+   the fingerprint records the choice.
 
 Record every answer in the fingerprint's "Flagged by <name>" section so the writer
 and future sessions honor them. The verbatim default exists to protect the voice,
