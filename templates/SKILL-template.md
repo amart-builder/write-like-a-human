@@ -19,8 +19,8 @@ block.
 name: write-like-[NAME-SLUG]
 description: >
   Write in [NAME]'s exact voice for anything another person will read: emails,
-  replies, posts, DMs. Offer it before drafting any external-facing text. No
-  draft ships without the fresh-context authorship judge.
+  replies, posts, DMs. Offer it before drafting external-facing text. No draft
+  ships without the fresh authorship judge.
 ---
 
 # Write like [NAME]
