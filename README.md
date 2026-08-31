@@ -15,8 +15,9 @@ prompt, paste this:
 That's the whole interface. Your AI reads this repo and walks you through the rest.
 Works best with Claude Code; any agent that can read a repo, write local files, and
 spawn a clean-context second agent can run the full version. Agents with fewer
-abilities (no files, no subagents) get an honest degraded version per SETUP.md:
-same craft, weaker verification, and it says so instead of faking it.
+abilities (no files, no subagents) get a degraded version per SETUP.md that is
+built to say what it can't verify instead of faking it: same craft, weaker
+verification, labeled as such.
 
 ## What it actually does
 
@@ -41,7 +42,9 @@ scores 0 to 100 how likely the same person wrote each piece. A draft is delivere
 as a pass only when the judge doesn't confidently pick it out AND the score clears
 a calibrated gate. Fail either, and the writer gets told exactly which lines gave
 it away and tries again. Three strikes and it stops and shows you the best attempt
-with the judge's objections. Every draft you see carries a status stamp; it quotes
+with the judge's objections. Expect that to happen sometimes: a gate honest
+enough to catch AI writing also catches drafts, and "you decide" is a normal
+ending, not a malfunction. Every draft you see carries a status stamp; it quotes
 a number only when calibration has earned one.
 
 It also wires itself in: with your OK, setup adds one routing line to your
@@ -72,8 +75,8 @@ on your corpus.
 
 The writer is also held to [blader/humanizer](https://github.com/blader/humanizer),
 a community catalog of 29 AI-writing tells (vendored in this repo, MIT), before
-the judge ever sees a draft. The catalog catches the obvious slop; the judge
-catches most of what a word list can't.
+the judge ever sees a draft. The catalog catches the obvious slop; the judge is
+there for what a word list can't see.
 
 ## What's in the repo
 
@@ -88,7 +91,9 @@ catches most of what a word list can't.
 
 Your corpus is stored on your machine, and drafting and judging send your samples
 and drafts to the AI providers involved: the model that writes and judges, plus
-the second vendor when the cross-family check runs. Nothing else sees them, and
+the second vendor when the cross-family check runs (and, if you choose email
+mining, the mining step itself sends candidate emails to the model provider and
+whatever connector serves your mail). No other service receives them, and
 sending, posting, and publishing are always yours; the skill only drafts. This is
 for writing as yourself (or openly borrowing a public author's style, with that
 openness required). Using it to pass off writing as someone else's is
@@ -96,4 +101,6 @@ impersonation; the setup instructions and the generated skill itself both refuse
 that.
 
 MIT licensed. Humanizer rules by [Siqi Chen](https://github.com/blader/humanizer),
-also MIT.
+distributed by its upstream as MIT; the catalog itself credits Wikipedia's
+"Signs of AI writing" guide (CC BY-SA) as its source, and the vendored copy
+keeps both notices.

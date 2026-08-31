@@ -9,9 +9,14 @@ files, one source per file. Keep every piece verbatim. Do not paraphrase, do not
 
 ## Sources, in order of preference
 
-1. **nav.al** (his blog). Fetch pages from https://nav.al. Prefer the short essays and
-   transcribed talks. Good starting points: the "How to Get Rich" series pages and the
-   happiness essays. Save 10 to 20 pieces.
+1. **nav.al** (his blog). Fetch pages from https://nav.al. Prefer the short
+   essays he wrote himself. Transcribed talks and podcast pages need care: many
+   include a co-host or guest, so a raw page grab creates a MIXED-AUTHOR
+   corpus, which breaks the one-author assumption everything here rests on.
+   From transcripts, keep only turns positively attributed to Naval (his
+   speaker label), drop everyone else's lines, and verify each excerpt's
+   speaker before saving. Good starting points: the "How to Get Rich" series
+   pages and the happiness essays. Save 10 to 20 pieces.
 2. **The "How to Get Rich (without getting lucky)" tweetstorm** (May 2018, @naval on X).
    Widely mirrored; nav.al hosts expanded versions of each tweet as posts. If you can
    search X, pull his most-liked original posts (not replies, not retweets).
@@ -25,12 +30,18 @@ Target: 3,000 to 8,000 words of his actual writing across at least 10 distinct p
 
 ## If every fetch fails
 
-Use `STYLE-PROFILE.md` in this directory as the voice source instead, and tell the user
-plainly: "I couldn't fetch Naval's writing, so I'm working from a style description.
-Matching will be looser." A style description cannot support an authorship comparison,
-so with zero real samples the skill runs PROVISIONAL: no judge scores, no pass claims,
-just the description-guided draft. Say that out loud, and offer the paste-your-own
-path as the better option.
+Use `STYLE-PROFILE.md` in this directory as the voice source instead (copy it
+into the installed skill's directory; it is one of the files the no-git fetch
+list in SETUP.md names), and tell the user plainly: "I couldn't fetch Naval's
+writing, so I'm working from a style description. Matching will be looser." A
+style description cannot support an authorship comparison, so with zero real
+samples the skill runs PROVISIONAL: no judge scores, no pass claims, just the
+description-guided draft. In this branch the generated skill's Step 1 reads
+the style profile instead of corpus samples (there are none; state that in the
+installed skill rather than leaving a corpus instruction it can't follow), the
+fingerprint is written from the profile and labeled UNMEASURED, and every
+measurement-flavored claim stays out of it. Say all of that out loud, and
+offer the paste-your-own path as the better option.
 
 ## One warning to give the user
 
