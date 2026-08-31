@@ -127,12 +127,13 @@ samples into `corpus/holdout/`; with 12 or more, hold out 3 or 4. Pick holdouts
 of VARIED lengths (at least one short piece and one mid-length piece when the
 corpus has both): each lineup uses the 2 holdouts closest in length to the
 candidate, and a pool that is all one length lets a judge solve the lineup on
-shape instead of voice. But respect an evidence floor: every holdout needs at
-least about 60 words of body. Below that a judge has too little text to
-attribute ANY author confidently, real writing scores low, and calibration
-fails for a reason that has nothing to do with the judge or the corpus
-(measured: a real 36-word note drew a median of 80 from judges that scored the
-same author's longer real mail 85-90). Rename them to neutral filenames (`holdout-1.md`,
+shape instead of voice. But know what short holdouts are for: a short piece
+gives a judge too little text to attribute ANY author confidently, so real
+short writing scores low (measured: a real 36-word note drew a median of 80,
+and a real 74-word note a median of 76, from judges that scored the same
+author's mid-length real mail 85-90). Short holdouts length-match lineups for
+short candidates; they never set the numeric gate. See the per-band rule in
+judge-prompt.md. Rename them to neutral filenames (`holdout-1.md`,
 `holdout-2.md`, ...) so nothing the writer ever sees hints at their recipients
 or topics, and delete or relocate any other copy of those pieces that sits at a
 path the writer could wander into (a raw export, a samples archive). The writer
