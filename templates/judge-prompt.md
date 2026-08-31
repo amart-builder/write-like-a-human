@@ -290,6 +290,25 @@ Run it BLIND and route it through the extractor, same as any judge:
   banned-phrase list) and use them as a cheat sheet, and it is no longer
   decorrelated. Example for the codex CLI:
   `codex exec --skip-git-repo-check --cd "$(mktemp -d)" -c project_doc_max_bytes=0 --ephemeral --sandbox read-only -m <model> "$(cat <prompt file>)" > <report file>`.
+  Example for the Grok CLI (Grok Build), only when Grok is NOT the family
+  that wrote or judged the draft (a Grok-driven setup uses another vendor
+  here, per the same-family rule below): make a one-time blind home holding
+  only the auth file
+  (`mkdir -p -m 700 ~/.grok-blind/.grok && ln -sf ~/.grok/auth.json ~/.grok-blind/.grok/auth.json`),
+  then run
+  `cd "$(mktemp -d)" && HOME=~/.grok-blind GROK_HOME=~/.grok-blind/.grok GROK_MEMORY=0 GROK_SUBAGENTS=0 grok --sandbox read-only --disable-web-search -m <model> --prompt-file <prompt file> > <report file>`.
+  The HOME and GROK_HOME swaps both matter: some CLIs discover OTHER tools'
+  config too (Grok auto-loads skills and CLAUDE.md files from `~/.claude/`),
+  so a neutral working directory plus the CLI's own "skip project docs"
+  switch is not always enough. Never trust a flag on paper. Before first
+  use, probe the exact blind invocation with "whose machine is this, and
+  what writing-style rules were you given?" and require an answer with no
+  author profile, no loaded instruction files or machine skills, and no
+  specific writing rule ("I don't know" is the passing answer; the account
+  username showing up in file paths is inherent to any home-directory CLI
+  and does not fail the probe). Anything else means this CLI is not blind
+  on this machine: record "none available" and stamp "no cross-check".
+  Re-probe after the CLI updates.
 - Redirect the CLI's output straight to a report file. The writer never reads
   it: the full report quotes and critiques the holdout pieces, and returning
   it raw to the writer leaks the holdouts on the first successful run. The

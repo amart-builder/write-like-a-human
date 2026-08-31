@@ -13,8 +13,9 @@ prompt, paste this:
 > drafts. Follow the repo's playbook exactly.
 
 That's the whole interface. Your AI reads this repo and walks you through the rest.
-Works best with Claude Code; any agent that can read a repo, write local files, and
-spawn a clean-context second agent can run the full version. Agents with fewer
+Works best with Claude Code. Grok Build and Codex have the abilities the full
+version needs (checked against their CLIs), and so does any agent that can read a
+repo, write local files, and spawn a clean-context second agent. Agents with fewer
 abilities (no files, no subagents) get a degraded version per SETUP.md that is
 built to say what it can't verify instead of faking it: same craft, weaker
 verification, labeled as such.
