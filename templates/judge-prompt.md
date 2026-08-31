@@ -155,10 +155,10 @@ averaging):
 
 1. **Real-writing probe.** EVERY holdout in the pool scored as an unlabeled
    single candidate (plain protocol, own context line, absent from the corpus
-   block), median of 3 draws each. Median per holdout must clear the default
-   gate of 85. (Holdouts must carry at least ~60 words of body; see the
-   corpus guide. A shorter piece fails this probe for lack of evidence, not
-   because anything is broken.) If a holdout's median fails, real writing fails the gate: the
+   block), median of 3 draws each. Median per score-gate holdout must clear
+   the default gate of 85. (Short holdouts fail this probe for lack of
+   evidence, not because anything is broken; they become lineup-only
+   holdouts under the per-band rule below, and their scores are recorded.) If a holdout's median fails, real writing fails the gate: the
    gate is broken for this corpus and the channel is PROVISIONAL. A single low
    draw is recorded, not excused and not decisive; the median decides, and
    there is no "within noise" escape.
@@ -191,7 +191,21 @@ averaging):
    calibrated gate," never "indistinguishable from a human": no blinded human
    evaluation has run.
 
-Gate setting, from probe 1 medians: gate G = lowest holdout median minus 5,
+The gate is per LENGTH BAND as well as per channel. Measured on a real
+corpus: judges score short real pieces (under ~90 words) materially lower
+than the same author's mid-length real pieces (less text, less evidence), and
+a marker-dense imitation can out-score plain real writing at short lengths.
+So derive G only from holdouts in bands where probe 1 passes, and apply the
+numeric gate only to candidates in those bands. A band whose real holdouts
+cannot clear the floor (typically short notes) runs the LINEUP and line
+feedback only: stamp the lineup verdict plus "score gate uncalibrated at this
+length," and claim no number. Holdouts from ungated bands stay in the pool
+for lineup length-matching only; they never gate probe 1. Run the
+voice-matched probe (probe 4) at a length INSIDE the gated band; a short
+imitation only tells you about the short band.
+
+Gate setting, from the gated-band probe 1 medians: gate G = lowest such
+holdout median minus 5,
 clamped between 80 and 90 (probe 1 requires every holdout median to reach 85,
 so G below 80 cannot occur; the 90 cap stops a lenient judge inflating the
 gate past usefulness). This cuts both ways: a harsh judge lowers the gate, a
