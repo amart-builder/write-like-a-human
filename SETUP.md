@@ -34,7 +34,9 @@ live? Can you spawn a fresh-context agent (or at least open a clean conversation
 the judge? Do you have email access, and which model provider will the judge run on?
 Can you also run a SECOND model family (another vendor's model through its CLI or an
 API) for the judge protocol's cross-family check? Note the exact command or API if
-so. Is another voice or writing skill already installed whose trigger overlaps this
+so, and probe that command blind before recording it (the cross-family section of
+`templates/judge-prompt.md` has the probe); a command that fails the probe is
+recorded as "none available", not as a cross-family judge. Is another voice or writing skill already installed whose trigger overlaps this
 one? What you find shapes what you offer; what you lack, you disclose instead of
 faking.
 
@@ -155,8 +157,13 @@ Keep the whole file under about 80 lines. A bloated fingerprint gets ignored.
    providers, and the cross-family judge found in step 0: the family plus the
    exact command or API, or "none available") and write it to the user's skills
    directory. For Claude Code that is `~/.claude/skills/write-like-<name>/`.
-   For another tool, use its equivalent of an always-loadable instruction file
-   (rules file, custom instructions) and adapt: same content, same loop.
+   For Grok Build it is `~/.grok/skills/write-like-<name>/` (Grok also
+   auto-loads skills from `~/.claude/skills/`, so an install made by Claude
+   Code works there unchanged; that same auto-loading is why any blind judge
+   run under Grok needs the blind invocation from the cross-family section
+   of `judge-protocol.md`, not just a clean directory). For another tool,
+   use its equivalent of an always-loadable instruction file (rules file,
+   custom instructions) and adapt: same content, same loop.
 2. Copy `reference/humanizer-rules.md`, `reference/HUMANIZER-LICENSE`, and
    `templates/judge-prompt.md` (as `judge-protocol.md`) into the same
    directory, so the installed skill is self-contained and works offline from
