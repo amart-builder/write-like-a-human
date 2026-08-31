@@ -5,7 +5,7 @@ Claude write like me," or anything equivalent, treat that as the complete reques
 Do not ask them to restate instructions; everything you need is here.
 
 First `git clone` the repo (or fetch every file SETUP.md lists, raw). The
-playbook spans six files; improvising from the README alone produces a
+playbook spans nine files; improvising from the README alone produces a
 broken skill. Read `README.md` and all of `SETUP.md` before changing anything
 on their machine, then follow the setup playbook in order:
 

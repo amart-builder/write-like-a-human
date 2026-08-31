@@ -48,10 +48,12 @@ MCP, a connected mail client, an export file) to build the corpus from mail they
   redaction, the liability doesn't.
 - Show the user the list of chosen emails (subject lines and first lines) and get an
   explicit OK before saving. It is their private mail; they decide what gets kept.
-- The corpus lives on the user's machine, outside any git repo, and it never gets
-  transmitted anywhere without the user's explicit OK. If the judge in this
-  environment runs on a different hosted model provider, say so before the first
-  judge run; the corpus goes to that provider with every judgment.
+- The corpus lives on the user's machine, outside any git repo (SETUP.md step 4
+  verifies this with `git rev-parse`, not by assumption), and it never gets
+  transmitted anywhere beyond the model providers the user was told about:
+  mining sends candidates to the provider doing the mining, and every judge run
+  sends corpus samples to the judge's provider (plus the cross-family vendor
+  when that check runs). Say all of that before it happens, not after.
 - If there is no email access in this environment, say so and fall back to Path 1.
   Do not ask the user for their password, and do not set up new email access just
   for this.
@@ -109,25 +111,38 @@ Count usable words per channel, not just samples. Working floors:
 - Emails and other mid-length prose: at least 8 pieces and 1,500 usable words in
   that channel.
 - Very short form (tweets, texts): at least 30 pieces.
-- Long form (blog posts, essays): at least 4 pieces.
+- Long form (blog posts, essays): at least 5 pieces (below 5 samples there is
+  never a gate, whatever the channel).
 
-Above the floor in a channel: full gate, scores and all. Below it: the skill still
-works but runs PROVISIONAL in that channel (see judge-prompt.md): feedback loop yes,
-numeric pass claims no. Tell the user which channels are provisional and what would
-graduate them.
+Floors count TOTAL samples in the channel, holdouts included; check the floor
+first, then do the holdout split. Above the floor in a channel: full gate,
+scores and all. Below it: the skill still works but runs PROVISIONAL in that
+channel (see judge-prompt.md): feedback loop yes, numeric pass claims no. Tell
+the user which channels are provisional and what would graduate them.
 
 ## Holdout set
 
-If the corpus has 8 or more samples in a channel, move 2 of that channel's samples
-into `corpus/holdout/`, renamed to neutral filenames (`holdout-1.md`,
-`holdout-2.md`) so nothing the writer ever sees hints at their recipients or
-topics. The writer never reads these; only the judge pipeline's runner does. The
-judge uses them for the lineup check described in `templates/judge-prompt.md`. If
-the corpus is too small for a holdout, skip it; the judge then runs on the plain
+If the corpus has 8 or more samples in a channel, move 2 of that channel's
+samples into `corpus/holdout/`; with 12 or more, hold out 3 or 4. Pick holdouts
+of VARIED lengths (at least one short piece and one mid-length piece when the
+corpus has both): each lineup uses the 2 holdouts closest in length to the
+candidate, and a pool that is all one length lets a judge solve the lineup on
+shape instead of voice. But respect an evidence floor: every holdout needs at
+least about 60 words of body. Below that a judge has too little text to
+attribute ANY author confidently, real writing scores low, and calibration
+fails for a reason that has nothing to do with the judge or the corpus
+(measured: a real 36-word note drew a median of 80 from judges that scored the
+same author's longer real mail 85-90). Rename them to neutral filenames (`holdout-1.md`,
+`holdout-2.md`, ...) so nothing the writer ever sees hints at their recipients
+or topics, and delete or relocate any other copy of those pieces that sits at a
+path the writer could wander into (a raw export, a samples archive). The writer
+never reads holdouts; only the judge pipeline's runner does. The judge uses
+them for the lineup check described in `templates/judge-prompt.md`. If the
+corpus is too small for a holdout, skip it; the judge then runs on the plain
 scoring protocol.
 
 Holdouts should not fossilize: when the corpus later grows by 5 or more new
 samples, a maintenance session that has NOT read the new samples rotates one of
 them into `corpus/holdout/`, retires the oldest holdout back into `corpus/`, and
-recalibrates. A gate compared against the same two pieces forever slowly becomes
-a gate about those two pieces.
+recalibrates. A gate compared against the same few pieces forever slowly becomes
+a gate about those pieces.

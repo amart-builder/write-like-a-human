@@ -2,12 +2,15 @@
 
 You are the setup agent. You are about to build a personal "write like me" skill for
 your user. First get the whole repo locally: `git clone
-https://github.com/amart-builder/write-like-a-human` (or fetch all six working
-files raw: `README.md`, `SETUP.md`, `AGENTS.md`, `templates/SKILL-template.md`,
-`templates/judge-prompt.md`, `templates/corpus-guide.md`, plus
-`reference/humanizer-rules.md` and `reference/naval/SOURCES.md` if that path
-comes up). Working from the README alone and improvising the rest produces a
-broken skill that looks finished. Read this whole file and
+https://github.com/amart-builder/write-like-a-human` (or, with no git, fetch
+all seven required files raw: `README.md`, `SETUP.md`, `AGENTS.md`,
+`templates/SKILL-template.md`, `templates/judge-prompt.md`,
+`templates/corpus-guide.md`, `reference/humanizer-rules.md`, plus
+`reference/HUMANIZER-LICENSE`, and both `reference/naval/SOURCES.md` and
+`reference/naval/STYLE-PROFILE.md` if the Naval path comes up).
+`humanizer-rules.md` is NOT optional: the generated skill references it by
+name, and installing without it ships a broken writer. Working from the README
+alone and improvising the rest produces a broken skill that looks finished. Read this whole file and
 `templates/corpus-guide.md` before you start. Then run the steps in order. Do
 not improvise a different process; the order exists because each step feeds the
 next.
@@ -19,6 +22,7 @@ write-like-<name>/
   SKILL.md               their personal skill (from templates/SKILL-template.md)
   VOICE-FINGERPRINT.md   measured habits of their voice (you build this, step 3)
   humanizer-rules.md     copied from reference/humanizer-rules.md
+  HUMANIZER-LICENSE      copied from reference/ (the vendored file's license)
   judge-protocol.md      copied from templates/judge-prompt.md
   corpus/                their verbatim samples (+ corpus/holdout/ when big enough)
 ```
@@ -56,7 +60,11 @@ jargon.
 Offer the three paths from `templates/corpus-guide.md`:
 
 1. Paste their own writing (best fidelity, 10 minutes of their time).
-2. Mine their sent email, with their permission, if this environment has email access.
+2. Mine their sent email, with their permission, if this environment has email
+   access. Say this before mining, not after: mining itself already transmits
+   email content to the model provider (and whatever connector serves the
+   email), including candidates the user will later reject. Only proceed on an
+   explicit yes to that.
 3. Naval Ravikant fallback: no samples needed, but it sounds like Naval, not them.
    Follow `reference/naval/SOURCES.md` to build it at setup time.
 
@@ -76,6 +84,16 @@ Read every sample. Confirm with the user anything that looks off (AI-assisted pi
 other people's words in a thread, boilerplate). Cut polluted samples. If fewer than 5
 samples survive, stop and tell the user the match will be unreliable; let them decide
 to add more or proceed degraded.
+
+Ask directly: is every piece here the user's own from-scratch writing? If any of
+it belongs to someone else, there are exactly two legitimate branches: the
+author has explicitly authorized the user to ghostwrite as them (get that said
+in so many words, and record it in the fingerprint's Flagged section), or the
+corpus is a named public author's writing on the open Naval-style path, which
+stays PROVISIONAL with mandatory style-borrowed disclosure. Any other answer,
+including an evasive one, stops setup. Building an authorship-imitation gate on
+writing the user has no right to imitate is the one thing this repo must never
+help with.
 
 Then run a short corpus interview: the corpus is theirs, so before measuring anything,
 ask three quick questions in one message, not a quiz:
@@ -139,17 +157,29 @@ Keep the whole file under about 80 lines. A bloated fingerprint gets ignored.
    directory. For Claude Code that is `~/.claude/skills/write-like-<name>/`.
    For another tool, use its equivalent of an always-loadable instruction file
    (rules file, custom instructions) and adapt: same content, same loop.
-2. Copy `reference/humanizer-rules.md` and `templates/judge-prompt.md`
-   (as `judge-protocol.md`) into the same directory, so the installed skill is
-   self-contained and works offline from this repo.
-3. Move the corpus into `corpus/` there.
+2. Copy `reference/humanizer-rules.md`, `reference/HUMANIZER-LICENSE`, and
+   `templates/judge-prompt.md` (as `judge-protocol.md`) into the same
+   directory, so the installed skill is self-contained and works offline from
+   this repo.
+3. Move the corpus into `corpus/` there, then protect it: run
+   `git rev-parse --show-toplevel` from the skills directory. If it resolves,
+   the corpus just landed inside a git repository (dotfiles repos are common,
+   and some are public): add `corpus/` and `VOICE-FINGERPRINT.md` to that
+   repo's ignore rules, verify with `git check-ignore`, and tell the user; or
+   install the corpus outside the repo and point the skill at it. Also check
+   the setup workspace for leftover raw material (an `.mbox`/`.eml` export, a
+   pasted-samples scratch file) and delete or relocate it outside any repo.
+   Set restrictive permissions on the private files: `chmod 700` on `corpus/`
+   and its subdirectories, `chmod 600` on every file inside (skip on
+   filesystems that don't support it, and say so).
 4. Validate before moving on, mechanically: the installed SKILL.md begins with
    `---` on line 1 (the template's ```markdown fence stripped), `name:` is a
-   lowercase slug, `description:` is under 200 characters, `[BRACKET]` and
-   `[VERIFY]` survived as literal text, no [PLACEHOLDER] remains, the
-   fingerprint is under about 80 lines, and the skill actually loads (in Claude
-   Code, it should appear in the available skills). A skill that fails any of
-   these fails silently later, so fix it now.
+   lowercase slug, `description:` is under 200 characters COUNTED WITH THE
+   REAL NAME FILLED IN, `[BRACKET]` and `[VERIFY]` survived as literal text,
+   no [PLACEHOLDER] remains, the fingerprint is under about 80 lines, and the
+   skill actually loads (in Claude Code, it should appear in the available
+   skills). A skill that fails any of these fails silently later, so fix it
+   now.
 
 One honest limitation to handle now: the judge must run with fresh context. In Claude
 Code, that is a subagent, and it works out of the box. In tools without subagents,
@@ -162,9 +192,11 @@ A skill only loads when something triggers it, and "the user remembers to ask"
 is not a system. With the user's explicit OK:
 
 1. Append one routing line to their agent's always-loaded instruction file (for
-   Claude Code, `~/.claude/CLAUDE.md`): "Anything external-facing that I'll
-   send or publish as my own words goes through write-like-<name>: offer it
-   before drafting." Show them the exact line first; it's their config.
+   Claude Code, `~/.claude/CLAUDE.md`). The line addresses the AGENT, so write
+   it in third person about the user: "Anything external-facing that <name>
+   will send or publish as their own words goes through write-like-<name>:
+   offer it before drafting." Show them the exact line first; it's their
+   config.
 2. If step 0 found an existing skill or instruction with an overlapping writing
    trigger, surface the conflict and make the user choose: retire the old one,
    narrow it, or route it through this skill. Two voice systems competing for
@@ -183,10 +215,11 @@ AI draft must fail it, a lineup probe must catch the AI draft without
 confidently fingering the author's real writing, and your own best voice-matched
 imitation gets scored and its median recorded in the skill, because the user
 deserves to know whether the gate can tell a good imitation from the real thing
-or only slop from the real thing. Set the gate by the formula there (lowest
-holdout median minus 5, clamped 75 to 90) and record the medians in the
-generated skill's Channel status block. With fewer than 8 samples in a channel,
-use the temporary-holdout branch described there. All probes pass: the gate is
+or only slop from the real thing. The lineup probe is three draws with a vote
+(at least 2 of 3 catch the AI draft), per the Calibrate section. Set the gate
+by the formula there (lowest holdout median minus 5, clamped 80 to 90) and
+record the medians in the generated skill's Channel status block. With fewer
+than 8 samples in a channel, use the temporary-holdout branch described there. All probes pass: the gate is
 live, unless the channel sits below its corpus floor, in which case passing
 probes sharpen the feedback loop but do not lift PROVISIONAL for that channel.
 Any probe fails: the skill runs PROVISIONAL (feedback loop without numeric pass
@@ -210,9 +243,14 @@ Do not declare success on an installed file. Prove the loop on 3 real pieces:
    ask for 3 real tasks (a reply, a post, a short update).
 2. For each, run the full loop from the installed SKILL.md: absorb, write, judge,
    rewrite if needed, max 3 attempts. Use the real judge, fresh context each time.
-3. Show the user all 3 results with their judge stamps (score, lineup verdict,
-   attempt count) and
-   the drafts side by side with what the judge flagged.
+3. Show the user all 3 results with their judge stamps and the drafts side by
+   side with what the judge flagged. On a LIVE channel the stamp carries score,
+   lineup verdict, and attempt count; on a PROVISIONAL channel it says "best
+   effort, judge uncalibrated for this channel" with no number, and that is the
+   correct result, not a failure of the test. Record the LIVE-channel outcome
+   (passed at attempt N, or ended at "human decides") in the Channel status
+   block; ending at "human decides" is a normal outcome of an honest gate. Any
+   later recalibration invalidates this test; re-run this step after one.
 4. Ask what reads wrong. Every "I'd never say that" goes into the fingerprint's
    Flagged section. Their rewrites of YOUR lines are feedback, never corpus: an
    edited AI draft in the corpus slowly teaches the judge to love AI text. Only
@@ -227,6 +265,20 @@ Tell the user, briefly: the skill now offers itself for external writing (the
 step 4.5 routing line), asking by name always works, every draft carries a
 judge stamp (and what the stamp vocabulary means), corrections make it sharper,
 and pasting in new writing they wrote from scratch grows the corpus. Done.
+
+## Updating an existing install
+
+The installed skill is a copy, not a link: when this repo's templates change,
+existing installs keep the old mechanics until someone re-syncs them. To
+update: re-copy `templates/judge-prompt.md` over the installed
+`judge-protocol.md` and re-apply the template diff to the installed SKILL.md,
+preserving ONLY the instance-specific parts (name, channels, calibration
+record, cross-family command, machine-local adapters, the Flagged section).
+Diff the result against the template to confirm nothing else diverges; every
+deliberate machine-local divergence must be labeled as such in the file. If
+the judge protocol changed, recalibrate (which then requires re-running step
+6). Skipping the re-sync is how an install drifts into running rules its own
+documentation no longer describes.
 
 ## Boundaries (non-negotiable)
 

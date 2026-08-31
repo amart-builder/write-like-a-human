@@ -515,7 +515,7 @@ Provide:
 >
 > [NAME], an engineer at a fintech startup [VERIFY: real person and quote needed], says she uses Copilot "like autocomplete for boring code" but reviews every line before committing. [NAME], a senior dev at a larger company [VERIFY], disabled it after it kept suggesting patterns from a deprecated internal library.
 >
-> The productivity claims are hard to verify. GitHub says Copilot users "accept 30% of suggestions," but acceptance is not correctness, and correctness is not value. The 2024 Uplevel study found no statistically significant difference in pull-request throughput between teams with and without AI assistants.
+> The productivity claims are hard to verify. GitHub says Copilot users "accept 30% of suggestions" [VERIFY: GitHub's published acceptance figure], but acceptance is not correctness, and correctness is not value. The 2024 Uplevel study found no statistically significant difference in pull-request throughput between teams with and without AI assistants.
 >
 > None of this means the tools are useless. It means they are tools. They do not replace judgment, and they do not eliminate the need for tests. If you do not have tests, you cannot tell whether the suggestion is right.
 
@@ -531,7 +531,7 @@ Provide:
 >
 > Engineers tend to land in two camps. Some use it like autocomplete for chores and review every line. Others disable it after it keeps suggesting patterns they don't want. Both feel reasonable.
 >
-> The productivity metrics are slippery. GitHub can say Copilot users "accept 30% of suggestions," but acceptance isn't correctness, and correctness isn't value. If you don't have tests, you're basically guessing.
+> The productivity metrics are slippery. GitHub can say Copilot users "accept 30% of suggestions" [VERIFY: GitHub's published acceptance figure], but acceptance isn't correctness, and correctness isn't value. If you don't have tests, you're basically guessing.
 
 **Changes made:**
 - Removed chatbot artifacts ("Great question!", "I hope this helps!", "Let me know if...")
@@ -551,11 +551,11 @@ Provide:
 - Removed generic positive conclusion ("the future looks bright", "exciting times lie ahead")
 - Made the voice more personal and less "assembled" (varied rhythm, fewer placeholders)
 
-**No-fabrication note (local patch, 2026-08-30):** the example above uses [NAME] and [VERIFY] markers where the original vendored version invented an interview and misattributed a study. Never invent people, quotes, anecdotes, or lived experience to make text feel human, and never cite a study from memory without checking it: humanizing changes style, not facts. Missing specifics get a [BRACKET] or [VERIFY] marker and a note to the user, never a plausible invention.
+**No-fabrication note (local patch, 2026-08-30, extended 2026-08-31):** the example above uses [NAME] and [VERIFY] markers where the original vendored version invented an interview and misattributed a study. The first-person lines in the example ("I've accepted suggestions that compiled...") are illustrative prose for a hypothetical author, not anyone's real experience; in real work, a first-person experience sentence may only come from the actual author. Never invent people, quotes, anecdotes, or lived experience to make text feel human, and never cite a study or a statistic from memory without checking it: humanizing changes style, not facts. Missing specifics get a [BRACKET] or [VERIFY] marker and a note to the user, never a plausible invention.
 
 
 ## Reference
 
-This skill is based on [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup. The patterns documented there come from observations of thousands of instances of AI-generated text on Wikipedia.
+This skill is based on [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup. The patterns documented there come from that project's observations of AI-generated text on Wikipedia. Wikipedia's own caveat carries over: these are descriptive signs that also occur in human writing, not proof by themselves; treat them as review signals in context, not blanket bans.
 
 Key insight from Wikipedia: "LLMs use statistical algorithms to guess what should come next. The result tends toward the most statistically likely result that applies to the widest variety of cases."
