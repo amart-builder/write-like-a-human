@@ -27,6 +27,43 @@ write-like-<name>/
   corpus/                their verbatim samples (+ corpus/holdout/ when big enough)
 ```
 
+## Roles, files, and who may read what
+
+Create the skill directory and its `corpus/` at the START (step 1), using the
+per-tool path from step 4.1 (for Codex, ask the user where they want it now),
+and save samples straight into it; that directory is also "the setup
+workspace" the later steps sweep for leftovers. Before the first sample
+lands, run step 4.3's protection (the `git rev-parse --show-toplevel` check,
+ignore rules if needed, `chmod 700/600`); step 4.3 then only re-verifies.
+Four roles run this playbook, and the verification rests on keeping their
+reading rights straight:
+
+- The SETUP AGENT (you) reads everything, holdouts included (step 2 makes you
+  read every sample). That knowledge disqualifies you from drafting anything
+  the judge will score: the probe-4 imitation and every step-6 draft come
+  from a fresh WRITER subagent that gets the installed skill, `corpus/`, and
+  the fingerprint, and never `corpus/holdout/` or a raw judge report.
+- The RUNNER (fresh subagent) prepares judge material in a `mktemp -d`
+  directory outside any git repo, and that directory is deleted (`rm -rf`)
+  once the attempt's last extractor has returned, borderline recheck and
+  cross-family check included; it holds holdouts verbatim.
+- JUDGES and the EXTRACTOR (fresh subagents) see only what the judge
+  protocol hands them. In Claude Code, "fresh subagent" means the Task tool;
+  other tools use their equivalent clean-context mechanism.
+
+During setup, one wiring difference from production: a nested subagent
+usually cannot spawn subagents of its own, so YOU spawn the runner, judge,
+and extractor, and relay the extractor's candidate-only summary to the
+writer subagent between attempts; the writer subagent only drafts. In
+production the writer is top-level and runs the pipeline itself, exactly as
+judge-protocol.md describes.
+
+Expectation set now so nobody "fixes" it mid-install: the skill template's
+Channel status block keeps its placeholders ([G], [DATE], the probe medians,
+the acceptance slot) until step 5 measures real values. Install with those
+placeholders standing and the block readable as uncalibrated. Inventing a
+number to make the file look finished is the exact lie step 5 warns about.
+
 ## Step 0: say what's about to happen
 
 First, a capability check, silently: can you read and write local files where skills
@@ -36,9 +73,12 @@ Can you also run a SECOND model family (another vendor's model through its CLI o
 API) for the judge protocol's cross-family check? Note the exact command or API if
 so, and probe that command blind before recording it (the cross-family section of
 `templates/judge-prompt.md` has the probe); a command that fails the probe is
-recorded as "none available", not as a cross-family judge. Is another voice or writing skill already installed whose trigger overlaps this
-one? What you find shapes what you offer; what you lack, you disclose instead of
-faking.
+recorded as "none available", not as a cross-family judge. Is another voice or
+writing skill already installed whose trigger overlaps this one? Check
+concretely where your tool keeps skills and standing instructions (for Claude
+Code: `ls ~/.claude/skills/*/SKILL.md`, plus a scan of `~/.claude/CLAUDE.md`
+and installed plugins for writing or voice routing lines). What you find
+shapes what you offer; what you lack, you disclose instead of faking.
 
 No filesystem at all (claude.ai without file access)? Be honest about the ceiling
 before starting: the corpus can live in project knowledge and the skill text in
@@ -73,7 +113,8 @@ Offer the three paths from `templates/corpus-guide.md`:
 Recommend 1 or 2 for anyone who mainly wants emails and messages. If the user
 gives no answer or seems confused, stop and wait; never fall through to the
 Naval path silently. Path 3 needs an explicit yes, and it comes with two
-permanent strings the user must hear first: the skill stays PROVISIONAL (a
+permanent strings the user must hear first: the skill stays PROVISIONAL,
+meaning the feedback loop runs but no numeric pass is ever claimed (a
 numeric authorship gate for a voice that isn't theirs would be theater), and
 everything it drafts must be presented as openly style-borrowed from a named
 public author, never passed off as that author's words. Collect the corpus
@@ -82,10 +123,12 @@ possible.
 
 ## Step 2: sanity-check the corpus
 
-Read every sample. Confirm with the user anything that looks off (AI-assisted pieces,
-other people's words in a thread, boilerplate). Cut polluted samples. If fewer than 5
-samples survive, stop and tell the user the match will be unreliable; let them decide
-to add more or proceed degraded.
+Read every sample (this is also the moment you become ineligible to draft for
+the judge; the roles block above says who drafts instead). Confirm with the
+user anything that looks off (AI-assisted pieces, other people's words in a
+thread, boilerplate). Cut polluted samples. If fewer than 5 samples survive,
+stop and tell the user the match will be unreliable; let them decide to add
+more or proceed degraded.
 
 Ask directly: is every piece here the user's own from-scratch writing? If any of
 it belongs to someone else, there are exactly two legitimate branches: the
@@ -121,7 +164,10 @@ not to overrule its owner.
 
 ## Step 3: build the voice fingerprint
 
-Create `VOICE-FINGERPRINT.md` by measuring the corpus, not vibing about it. Every
+Create `VOICE-FINGERPRINT.md` (in the skill directory, beside `corpus/`) by
+measuring the corpus, not vibing about it. Measure `corpus/` only, never
+`corpus/holdout/`: the writer reads this file, and holdout statistics in it
+would leak lineup material. Every
 claim in the file must quote at least one verbatim corpus example. Measure the
 writing BODIES only: exclude any metadata header (`channel:`, `context:` lines)
 you added to the sample files, because those are your words, not theirs, and on
@@ -161,14 +207,19 @@ Keep the whole file under about 80 lines. A bloated fingerprint gets ignored.
    auto-loads skills from `~/.claude/skills/`, so an install made by Claude
    Code works there unchanged; that same auto-loading is why any blind judge
    run under Grok needs the blind invocation from the cross-family section
-   of `judge-protocol.md`, not just a clean directory). For another tool,
-   use its equivalent of an always-loadable instruction file (rules file,
-   custom instructions) and adapt: same content, same loop.
+   of `judge-protocol.md`, not just a clean directory). Codex has no skills
+   directory: install the files in a directory of the user's choosing and
+   add a routing note in its always-loaded instruction file (for example
+   `~/.codex/AGENTS.md`) pointing at the installed SKILL.md. Any other tool,
+   same pattern: use its equivalent of an always-loadable instruction file
+   (rules file, custom instructions) and adapt: same content, same loop.
 2. Copy `reference/humanizer-rules.md`, `reference/HUMANIZER-LICENSE`, and
    `templates/judge-prompt.md` (as `judge-protocol.md`) into the same
    directory, so the installed skill is self-contained and works offline from
    this repo.
-3. Move the corpus into `corpus/` there, then protect it: run
+3. The corpus is already in `corpus/` there (step 1 put it in place, and the
+   protection below already ran before the first sample landed, per the roles
+   block). Re-verify the protection now: run
    `git rev-parse --show-toplevel` from the skills directory. If it resolves,
    the corpus just landed inside a git repository (dotfiles repos are common,
    and some are public): add `corpus/` and `VOICE-FINGERPRINT.md` to that
@@ -183,10 +234,15 @@ Keep the whole file under about 80 lines. A bloated fingerprint gets ignored.
    `---` on line 1 (the template's ```markdown fence stripped), `name:` is a
    lowercase slug, `description:` is under 200 characters COUNTED WITH THE
    REAL NAME FILLED IN, `[BRACKET]` and `[VERIFY]` survived as literal text,
-   no [PLACEHOLDER] remains, the fingerprint is under about 80 lines, and the
-   skill actually loads (in Claude Code, it should appear in the available
-   skills). A skill that fails any of these fails silently later, so fix it
-   now.
+   no [PLACEHOLDER] remains EXCEPT the Channel status calibration fields
+   ([G], [DATE], probe medians, acceptance slot), which stay as placeholders
+   until step 5 fills them (see the roles block), the fingerprint is under
+   about 80 lines, and the skill is loadable: the frontmatter parses and the
+   three copied files sit beside SKILL.md. A freshly written skill usually
+   appears in the tool's skill list only after a session restart, so tell
+   the user to restart and confirm it shows up rather than "testing" the
+   load yourself. A skill that fails any of these fails silently later, so
+   fix it now.
 
 One honest limitation to handle now: the judge must run with fresh context. In Claude
 Code, that is a subagent, and it works out of the box. In tools without subagents,
@@ -219,12 +275,19 @@ Before any real draft, prove the judge works on this corpus. Run the four probes
 in `templates/judge-prompt.md` (Calibrate section), each a median of three fresh
 draws: held-out real samples must clear the default gate, a deliberately generic
 AI draft must fail it, a lineup probe must catch the AI draft without
-confidently fingering the author's real writing, and your own best voice-matched
-imitation gets scored and its median recorded in the skill, because the user
+confidently fingering the author's real writing, and a best voice-matched
+imitation (written by a fresh writer subagent per the roles block, not by
+you) gets scored and its median recorded in the skill, because the user
 deserves to know whether the gate can tell a good imitation from the real thing
 or only slop from the real thing. The lineup probe is three draws with a vote
-(at least 2 of 3 catch the AI draft), per the Calibrate section. Set the gate
-by the formula there (lowest holdout median minus 5, clamped 80 to 90) and
+(at least 2 of 3 catch the AI draft), per the Calibrate section. Budget
+honestly: this is about 15 judge draws with a 2-holdout pool, plus 3 more
+for every additional holdout, so run the three draws of each probe in
+parallel and tell the user it takes a few minutes; collapsing to single
+draws quietly breaks the medians. Set the gate
+by the formula there (lowest holdout median minus 5, clamped 80 to 90,
+computed only from holdouts in length bands where probe 1 passed; short
+holdouts never set the gate, per the per-band rule in judge-prompt.md) and
 record the medians in the generated skill's Channel status block. With fewer
 than 8 samples in a channel, use the temporary-holdout branch described there. All probes pass: the gate is
 live, unless the channel sits below its corpus floor, in which case passing
@@ -250,13 +313,17 @@ Do not declare success on an installed file. Prove the loop on 3 real pieces:
    ask for 3 real tasks (a reply, a post, a short update).
 2. For each, run the full loop from the installed SKILL.md: absorb, write, judge,
    rewrite if needed, max 3 attempts. Use the real judge, fresh context each time.
+   You have read the holdouts, so you never draft these yourself: hand each
+   piece to a fresh writer subagent per the roles block, and pass judge
+   feedback back to it between attempts.
 3. Show the user all 3 results with their judge stamps and the drafts side by
    side with what the judge flagged. On a LIVE channel the stamp carries score,
    lineup verdict, and attempt count; on a PROVISIONAL channel it says "best
    effort, judge uncalibrated for this channel" with no number, and that is the
-   correct result, not a failure of the test. Record the LIVE-channel outcome
-   (passed at attempt N, or ended at "human decides") in the Channel status
-   block; ending at "human decides" is a normal outcome of an honest gate. Any
+   correct result, not a failure of the test. Record the LIVE-channel
+   outcomes, one per piece (passed at attempt N, or ended at "human
+   decides"), in the Channel status block; ending at "human decides" is a
+   normal outcome of an honest gate. Any
    later recalibration invalidates this test; re-run this step after one.
 4. Ask what reads wrong. Every "I'd never say that" goes into the fingerprint's
    Flagged section. Their rewrites of YOUR lines are feedback, never corpus: an

@@ -71,7 +71,9 @@ Never route a silent or confused user here; this path needs an explicit yes.
 
 ## Storage format
 
-Save the corpus inside the generated skill's directory:
+Save the corpus inside the skill's directory, created at the start of setup
+(SETUP.md step 4.1 lists the per-tool path; the roles block says to create
+it at step 1, protection first):
 
 ```
 corpus/
@@ -124,8 +126,12 @@ the user which channels are provisional and what would graduate them.
 
 If the corpus has 8 or more samples in a channel, move 2 of that channel's
 samples into `corpus/holdout/`; with 12 or more, hold out 3 or 4. Pick holdouts
-of VARIED lengths (at least one short piece and one mid-length piece when the
-corpus has both): each lineup uses the 2 holdouts closest in length to the
+of VARIED lengths, but at least one holdout must be mid-length or longer
+(roughly 90+ words when the corpus has such pieces): the numeric gate can
+only come from a band whose holdouts pass probe 1, and short pieces reliably
+can't. If calibration ends with no gated band, re-pick holdouts to include a
+longer piece and recalibrate before declaring the channel PROVISIONAL. Vary
+the rest: each lineup uses the 2 holdouts closest in length to the
 candidate, and a pool that is all one length lets a judge solve the lineup on
 shape instead of voice. But know what short holdouts are for: a short piece
 gives a judge too little text to attribute ANY author confidently, so real

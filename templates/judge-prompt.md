@@ -13,12 +13,18 @@ locally, not never-transmitted.
 ## The pipeline: runner, judge, extractor
 
 Where subagents and local files are available (Claude Code and equivalents), use
-three separate fresh subagents per attempt, connected by temp files, so the
-writer never sees holdout content and the judge never learns which piece is the
-candidate:
+three separate fresh subagents per attempt (in Claude Code, Task-tool
+subagents; other tools, their clean-context equivalent), connected by temp
+files, so the writer never sees holdout content and the judge never learns
+which piece is the candidate:
 
 1. **Runner** (fresh subagent): gets the candidate text, its channel/audience/
-   purpose facts, and the corpus paths. It reads the corpus and `corpus/holdout/`
+   purpose facts, the corpus paths, and the path to this protocol file (it
+   fills the judge prompt template below, so it must be able to read it). It
+   works in a `mktemp -d` directory outside any git repository; its files
+   hold holdouts verbatim, so that directory is removed (`rm -rf`) once the
+   attempt's last extractor has returned, borderline recheck and
+   cross-family check included. It reads the corpus and `corpus/holdout/`
    ITSELF (the writer never does), picks the corpus samples for the prompt block
    (channel-matched first, never a lineup piece), picks the 2 holdouts from the
    holdout pool whose BODY LENGTH is closest to the candidate's (a lineup where
@@ -149,7 +155,11 @@ probability, whatever the judge prompt calls it; it only means something
 relative to the gate calibrated for this corpus. It also varies a few points
 between draws on identical inputs, so single draws never decide anything at
 calibration time. At setup, when the corpus changes a lot, and any time this
-protocol itself changes, run the probes. Each probe result is the MEDIAN of
+protocol itself changes, run the probes. Scope that honestly: a change
+confined to one probe's own procedure re-runs that probe alone and marks its
+old recorded value superseded; a change to judging mechanics, the gate
+formula, or lineup semantics is a full recalibration, which also invalidates
+the acceptance test. Each probe result is the MEDIAN of
 three fresh-judge draws, probe 3 included (its three draws vote instead of
 averaging):
 
@@ -178,9 +188,12 @@ averaging):
    rule, categorical: at least 2 of the 3 judges must name the AI draft as the
    impostor, and NO judge may name a real holdout with HIGH confidence. A judge
    that confidently fingers the author's own writing is broken for this corpus.
-4. **Voice-matched probe.** The setup agent writes its BEST voice-matched
-   imitation (full corpus-and-fingerprint process, no judge loop) and scores it
-   as a single candidate, median of 3. This probe is honesty, not pass/fail:
+4. **Voice-matched probe.** A fresh writer subagent (corpus and fingerprint
+   only, no holdout access, no judge loop; the same kind of writer that will
+   draft in production, because a setup agent that has read the holdouts
+   would be an unfairly informed imitator) writes its BEST voice-matched
+   imitation, and it is scored as a single candidate, median of 3. This
+   probe is honesty, not pass/fail:
    record its median in the generated skill next to the holdout medians. The
    HOLDOUT BAND means the span from the lowest to the highest individual
    probe-1 draw. If the probe-4 median lands inside that band, the gate
@@ -224,7 +237,7 @@ is the one way this whole system lies to its user.
 
 Recalibration invalidates the acceptance test: after any recalibration (new
 gate, changed corpus, changed protocol), re-run the setup playbook's
-acceptance test (one real draft through the full loop) before calling the
+acceptance test (3 real drafts through the full loop) before calling the
 channel LIVE again, and record the observed outcome (passed at attempt N, or
 ended at "human decides") next to the gate. Users should know that ending at
 "human decides" after 3 attempts is a normal outcome of an honest gate, not a

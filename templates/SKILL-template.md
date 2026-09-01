@@ -41,12 +41,16 @@ providers involved ([JUDGE PROVIDER]; [CROSS-FAMILY PROVIDER OR "no second
 family recorded"]). Nothing goes anywhere else, and nothing is ever sent,
 posted, or published without the user.
 
-## Channel status (calibration is per channel; the setup agent fills this)
+## Channel status (calibration is per channel)
+
+The setup agent fills this at setup step 5. Until then these placeholders
+stand and mean uncalibrated. G is the calibrated gate score defined in
+judge-protocol.md.
 
 - [CHANNEL]: LIVE, gate [G] (calibrated [DATE]; holdout medians [LIST],
-  voice-matched probe median [Z]; acceptance test: [PASSED AT ATTEMPT N /
-  ENDED "HUMAN DECIDES"], [DATE]). Ending at "human decides" after 3 attempts
-  is a normal outcome of an honest gate.
+  voice-matched probe median [Z]; acceptance test, 3 pieces: [OUTCOME PER
+  PIECE: passed at attempt N, or ended "human decides"], [DATE]). Ending at
+  "human decides" after 3 attempts is a normal outcome of an honest gate.
 - [EVERY OTHER CHANNEL THE USER MAY ASK FOR]: PROVISIONAL ([REASON: no corpus /
   below floor / failed probe]). Draft best effort, say the match will be weak,
   stamp "best effort, judge uncalibrated for this channel," claim no number.

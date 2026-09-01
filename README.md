@@ -1,6 +1,16 @@
 # Write Like a Human
 
-Make your AI write like you. Not "professional and polished." You.
+AI agents write like AI. The em dashes and the "I hope this finds you well":
+readers spot it in one line, and everything after that line gets discounted.
+That tell works against anyone who lets an agent draft their email today.
+
+This repo is the fix, and it is not a skill you install. It is a playbook
+your own AI agent follows to BUILD you one. The whole architecture rests on
+one idea: collect a corpus of writing a human actually wrote (normally you:
+your own sent emails and posts), measure how that human really writes, and
+make every draft face a fresh AI judge that compares it against the real
+thing before any draft is called done. Make your AI write like you. Not
+"professional and polished." You.
 
 ## How to use it
 
@@ -66,7 +76,7 @@ too, as a decorrelated second opinion with a veto.
 
 Because a judge's number is only as good as the judge, setup calibrates it first,
 with repeated draws: your own held-out writing has to pass the gate, a generic AI
-draft has to fail it, and the setup agent's own best imitation of you gets scored
+draft has to fail it, and a fresh writer agent's best imitation of you gets scored
 and recorded, so you know whether the gate can tell a good imitation from the
 real thing or only slop from the real thing. If calibration fails or gets
 skipped, the skill says so and runs without score claims until the corpus earns
