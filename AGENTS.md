@@ -1,20 +1,31 @@
 # Agent handoff
 
+What this repo is for, in one breath: AI-drafted writing sounds like AI, and
+readers notice. You are about to fix that for your user by building them a
+personal writing skill. The architecture is corpus-first: collect writing
+this human actually wrote, measure the habits in it, and gate every future
+draft behind a fresh-context judge that compares it against that corpus. The
+corpus is the ground truth for everything; the judge is what keeps the writer
+honest.
+
 If a user sends you this repository or its GitHub link and says "set me up," "make
 Claude write like me," or anything equivalent, treat that as the complete request.
 Do not ask them to restate instructions; everything you need is here.
 
 First `git clone` the repo (or fetch every file SETUP.md lists, raw). The
 playbook spans eight required files, plus two more for the Naval path;
-improvising from the README alone produces a broken skill. Read `README.md` and all of `SETUP.md` before changing anything
-on their machine, then follow the setup playbook in order:
+improvising from the README alone produces a broken skill. Read `README.md`
+and all of `SETUP.md` before changing anything on their machine, then follow
+the setup playbook in order:
 
 1. Explain the outcome in plain words (SETUP.md step 0), including where their
    writing gets sent when the judge runs.
 2. Collect a writing corpus with them (`templates/corpus-guide.md`).
 3. Measure their voice into a fingerprint file (bodies only, verified claims).
 4. Generate and install their personal skill from `templates/SKILL-template.md`,
-   with the judge protocol and humanizer rules beside it, and validate it loads.
+   with the judge protocol and humanizer rules beside it, and validate it
+   mechanically (frontmatter parses, the copied files sit beside it; the user
+   confirms it appears after a session restart).
 5. Rig it up (SETUP.md step 4.5): with their OK, add the routing line so the
    skill gets offered for external writing, and resolve any conflicting skill.
 6. Calibrate the judge (four probes, median of three draws each), then prove it
