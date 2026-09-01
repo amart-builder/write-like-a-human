@@ -3,7 +3,7 @@
 You are the setup agent. You are about to build a personal "write like me" skill for
 your user. First get the whole repo locally: `git clone
 https://github.com/amart-builder/write-like-a-human` (or, with no git, fetch
-all seven required files raw: `README.md`, `SETUP.md`, `AGENTS.md`,
+all eight required files raw: `README.md`, `SETUP.md`, `AGENTS.md`,
 `templates/SKILL-template.md`, `templates/judge-prompt.md`,
 `templates/corpus-guide.md`, `reference/humanizer-rules.md`, plus
 `reference/HUMANIZER-LICENSE`, and both `reference/naval/SOURCES.md` and
